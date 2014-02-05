@@ -15,6 +15,8 @@ NSString * const kSimpleDBDomain = @"MusicInfo";
 
 @implementation MusicInfo
 
+#pragma mark - Singleton db access
+
 + (AmazonSimpleDBClient *)dbClient {
     if (!__sdbClient) {
         // Initial the SimpleDB Client.
@@ -58,7 +60,7 @@ NSString * const kSimpleDBDomain = @"MusicInfo";
 }
 
 
-# pragma mark - Instance methods
+# pragma mark - Instance Lifecycle methods
 
 - (id)init {
     self = [super init];
@@ -82,6 +84,9 @@ NSString * const kSimpleDBDomain = @"MusicInfo";
 
     return self;
 }
+
+
+# pragma mark - Instance Getter and Setter
 
 - (NSString *)musicName {
     return _attributes[@"musicName"];
@@ -162,6 +167,9 @@ NSString * const kSimpleDBDomain = @"MusicInfo";
     _attributes[@"musicType"] = [NSString stringWithFormat:@"%d", musicType];
 }
 
+
+#pragma mark - Instance db access
+
 - (BOOL)save {
     // FIXME: more valid key array definition
     NSArray *columns = @[@"musicName", @"orgMusicName", @"userName", @"orgUserName",
@@ -195,9 +203,10 @@ NSString * const kSimpleDBDomain = @"MusicInfo";
     if (deleteAttributesResponse.error != nil) {
         NSLog(@"Error: %@", deleteAttributesResponse.error);
         return NO;
-    }    
+    }
     return YES;
 }
+
 
 # pragma mark - Helper methods
 
