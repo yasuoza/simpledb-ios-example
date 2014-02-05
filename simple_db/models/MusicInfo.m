@@ -70,7 +70,14 @@ const static NSString *domain = @"MusicInfo";
     self = [self init];
 
     for (SimpleDBAttribute *attr in attribute) {
-        _attributes[attr.name] = attr.value ? attr.value : [[NSNull alloc] init];
+        NSString *val = attr.value;
+
+        /* If you want to keep NULL value to be nil, comment out following block. */
+        // if (!val) {
+        //     continue;
+        // }
+
+        _attributes[attr.name] = val ? val : [NSNull null];
     }
 
     return self;
