@@ -3,7 +3,8 @@
 #import <AWSRuntime/AWSRuntime.h>
 #import <AWSSimpleDB/AWSSimpleDB.h>
 
-static AmazonSimpleDBClient *__sdbClient;
+AmazonSimpleDBClient *__sdbClient;
+NSArray * __columns;
 NSString * const kSimpleDBDomain = @"MusicInfo";
 
 
@@ -24,6 +25,15 @@ NSString * const kSimpleDBDomain = @"MusicInfo";
         __sdbClient.endpoint = [AmazonEndpoints sdbEndpoint:AP_NORTHEAST_1];
     }
     return __sdbClient;
+}
+
++ (NSArray*)columns {
+    if (!__columns) {
+        __columns = @[@"musicName", @"orgMusicName", @"userName", @"orgUserName",
+                      @"scorePath", @"deviceId", @"orgDeviceId", @"shareDate",
+                      @"length", @"musicType"];
+    }
+    return __columns;
 }
 
 + (NSArray *)where:(NSString *)query {
@@ -71,6 +81,7 @@ NSString * const kSimpleDBDomain = @"MusicInfo";
 - (id)initWithDBAttributes:(NSArray *)attribute {
     self = [self init];
 
+    // retrieve attributes from SimpleDBItem instance
     for (SimpleDBAttribute *attr in attribute) {
         NSString *val = attr.value;
 
@@ -171,13 +182,8 @@ NSString * const kSimpleDBDomain = @"MusicInfo";
 #pragma mark - Instance db access
 
 - (BOOL)save {
-    // FIXME: more valid key array definition
-    NSArray *columns = @[@"musicName", @"orgMusicName", @"userName", @"orgUserName",
-                         @"scorePath", @"deviceId", @"orgDeviceId", @"shareDate",
-                         @"length", @"musicType"];
-
     NSMutableArray *attributes = [[NSMutableArray alloc] initWithCapacity:0];
-    for (NSString *key in columns) {
+    for (NSString *key in self.class.columns) {
         SimpleDBReplaceableAttribute *attribute = [[SimpleDBReplaceableAttribute alloc] init];
         [attributes addObject:[attribute initWithName:key
                                              andValue:[NSString stringWithFormat:@"%@", _attributes[key]]
