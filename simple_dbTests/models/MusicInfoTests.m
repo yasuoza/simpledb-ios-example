@@ -110,4 +110,12 @@
     XCTAssert(musicInfos.count == 3, @"musicInfos.count should be more than 1");
 }
 
+- (void)testSaveNewRecord {
+    MusicInfo *musicInfo = [[MusicInfo alloc] init];
+    musicInfo.musicName = @"aaaaaaaaaa";
+    musicInfo.scorePath = @"___---___---";
+    musicInfo.shareDate = 10000;
+    XCTAssert([musicInfo save], @"save should success");
+}
+
 @end

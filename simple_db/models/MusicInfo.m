@@ -4,7 +4,7 @@
 #import <AWSSimpleDB/AWSSimpleDB.h>
 
 static AmazonSimpleDBClient *__sdbClient;
-const static NSString *domain = @"MusicInfo";
+NSString * const kSimpleDBDomain = @"MusicInfo";
 
 
 @interface MusicInfo()
@@ -26,7 +26,7 @@ const static NSString *domain = @"MusicInfo";
 
 + (NSArray *)where:(NSString *)query {
     NSString *fullQuery = [NSString stringWithFormat:@"SELECT * FROM `%@` WHERE %@",
-                           domain, query];
+                           kSimpleDBDomain, query];
 
     SimpleDBSelectRequest *selectRequest = [[SimpleDBSelectRequest alloc] initWithSelectExpression:fullQuery];
     selectRequest.consistentRead = YES;
@@ -161,6 +161,34 @@ const static NSString *domain = @"MusicInfo";
 - (void)setMusicType:(NSInteger)musicType {
     _attributes[@"musicType"] = [NSString stringWithFormat:@"%d", musicType];
 }
+
+- (BOOL)save {
+    // FIXME: more valid key array definition
+    NSArray *columns = @[@"musicName", @"orgMusicName", @"userName", @"orgUserName",
+                         @"scorePath", @"deviceId", @"orgDeviceId", @"shareDate",
+                         @"length", @"musicType"];
+
+    NSMutableArray *attributes = [[NSMutableArray alloc] initWithCapacity:0];
+    for (NSString *key in columns) {
+        SimpleDBReplaceableAttribute *attribute = [[SimpleDBReplaceableAttribute alloc] init];
+        [attributes addObject:[attribute initWithName:key
+                                             andValue:[NSString stringWithFormat:@"%@", _attributes[key]]
+                                           andReplace:YES]];
+    }
+
+    SimpleDBPutAttributesRequest *putAttributesRequest = [[SimpleDBPutAttributesRequest alloc] initWithDomainName:kSimpleDBDomain
+                                                                                                      andItemName:self.scorePath
+                                                                                                    andAttributes:attributes];
+
+    SimpleDBPutAttributesResponse *putAttributesResponse = [self.class.dbClient putAttributes:putAttributesRequest];
+    if (putAttributesResponse.error != nil) {
+        NSLog(@"Error: %@", putAttributesResponse.error);
+        return NO;
+    }
+    return YES;
+}
+
+# pragma mark - Helper methods
 
 - (NSString *)description {
     NSMutableString *attrStr = [[NSMutableString alloc] init];

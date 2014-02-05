@@ -38,4 +38,6 @@
 - (NSInteger)musicType;
 - (void)setMusicType:(NSInteger)musicType;
 
+- (BOOL)save;
+
 @end
