@@ -1,0 +1,7 @@
+#ifndef simple_db_Constants_h
+#define simple_db_Constants_h
+
+#define ACCESS_KEY_ID @"AAAAA"
+#define SECRET_KEY    @"BBBBB"
+
+#endif
