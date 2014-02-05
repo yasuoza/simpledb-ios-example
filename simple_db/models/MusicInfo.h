@@ -39,5 +39,6 @@
 - (void)setMusicType:(NSInteger)musicType;
 
 - (BOOL)save;
+- (BOOL)destroy;
 
 @end

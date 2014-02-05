@@ -3,9 +3,27 @@
 
 @interface MusicInfoTests : XCTestCase
 
+@property MusicInfo *musicInfo;
+
 @end
 
 @implementation MusicInfoTests
+
+- (void)setUp {
+    [super setUp];
+
+    _musicInfo = [[MusicInfo alloc] init];
+    _musicInfo.scorePath = @"___---___---";
+    _musicInfo.musicName = @"hello world";
+    _musicInfo.shareDate = 100000;
+}
+
+- (void)tearDown {
+    [super tearDown];
+
+    // Clean up dummy record
+    XCTAssert([_musicInfo destroy], @"destroy should success");
+}
 
 # pragma mark - Setter and Getter
 
@@ -111,11 +129,12 @@
 }
 
 - (void)testSaveNewRecord {
-    MusicInfo *musicInfo = [[MusicInfo alloc] init];
-    musicInfo.musicName = @"aaaaaaaaaa";
-    musicInfo.scorePath = @"___---___---";
-    musicInfo.shareDate = 10000;
-    XCTAssert([musicInfo save], @"save should success");
+    XCTAssert([_musicInfo save], @"save should success");
+}
+
+- (void)testDeleteRecord {
+    XCTAssert([_musicInfo save], @"save should success");
+    XCTAssert([_musicInfo destroy], @"destroy should success");
 }
 
 @end

@@ -188,6 +188,17 @@ NSString * const kSimpleDBDomain = @"MusicInfo";
     return YES;
 }
 
+- (BOOL)destroy {
+    SimpleDBDeleteAttributesRequest *deleteAttributesRequest = [[SimpleDBDeleteAttributesRequest alloc] initWithDomainName:kSimpleDBDomain
+                                                                                                               andItemName:self.scorePath];
+    SimpleDBDeleteAttributesResponse *deleteAttributesResponse = [self.class.dbClient deleteAttributes:deleteAttributesRequest];
+    if (deleteAttributesResponse.error != nil) {
+        NSLog(@"Error: %@", deleteAttributesResponse.error);
+        return NO;
+    }    
+    return YES;
+}
+
 # pragma mark - Helper methods
 
 - (NSString *)description {
