@@ -12,6 +12,11 @@ $ cp -a path/to/AWSSimpleDB.framework simple_db/frameworks/
 ```
 
 
+## Available queries
+
+See [Building Amazon SimpleDB Queries](Building Amazon SimpleDB Queries)
+
+
 ## LICENSE
 
 Apache 2.0
