@@ -25,9 +25,8 @@ const static NSString *domain = @"MusicInfo";
 }
 
 + (NSArray *)where:(NSString *)query {
-    NSMutableString *fullQuery = [[NSMutableString alloc] initWithString:@"SELECT * "];
-    [fullQuery appendString:[NSString stringWithFormat:@" FROM `%@` WHERE ", domain]];
-    [fullQuery appendString:query];
+    NSString *fullQuery = [NSString stringWithFormat:@"SELECT * FROM `%@` WHERE %@",
+                           domain, query];
 
     SimpleDBSelectRequest *selectRequest = [[SimpleDBSelectRequest alloc] initWithSelectExpression:fullQuery];
     selectRequest.consistentRead = YES;
@@ -80,6 +79,7 @@ const static NSString *domain = @"MusicInfo";
 - (NSString *)musicName {
     return _attributes[@"musicName"];
 }
+
 - (void)setMusicName:(NSString *)musicName {
     _attributes[@"musicName"] = musicName;
 }
